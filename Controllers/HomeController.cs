@@ -24,7 +24,7 @@ namespace BusTicket.Controllers
         }
         public IActionResult Login()
         {
-            return View();
+            return View("Login","_LoginLayout");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
