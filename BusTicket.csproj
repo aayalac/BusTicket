@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\plugins\" />
+    <Folder Include="wwwroot\pages\" />
+  </ItemGroup>
+
 </Project>
