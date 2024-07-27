@@ -1,0 +1,47 @@
+﻿@model BusTicket.Models.Ruta
+
+@{
+    ViewBag.Title = "Crear Ruta";
+}
+
+<h1>Crear Ruta</h1>
+<hr />
+<form asp-action="Create">
+    <div class="col-md-4">    
+        <div class="form-group">
+            <label asp-for="Origen" class="control-label"></label>
+            <input asp-for="Origen" class="form-control"/>
+            <span asp-validation-for="Origen" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Destino" class="control-label"></label>
+            <input asp-for="Destino" class="form-control" />
+            <span asp-validation-for="Destino" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="FechaViaje" class="control-label"></label>
+            <input asp-for="FechaViaje" class="form-control" />
+            <span asp-validation-for="FechaViaje" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="TipoServicio" class="control-label"></label>
+            <input asp-for="TipoServicio" class="form-control" />
+            <span asp-validation-for="TipoServicio" class="text-danger"></span>
+        </div>        
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Crear</button>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label asp-for="UsuCrea" class="control-label"></label>
+            <input asp-for="UsuCrea" class="form-control" />
+            <span asp-validation-for="UsuCrea" class="text-danger"></span>
+        </div>        
+        <div class="form-group">
+            <label asp-for="UsuMod" class="control-label"></label>
+            <input asp-for="UsuMod" class="form-control" />
+            <span asp-validation-for="UsuMod" class="text-danger"></span>
+        </div>        
+  </div>
+</form>

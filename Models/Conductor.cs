@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace BusTicket.Models;
 
-public partial class Usuario
+public partial class Conductor
 {
-    public int IdUsuario { get; set; }
+    public int IdConductor { get; set; }
 
     public string? Nombres { get; set; }
 
@@ -23,11 +23,7 @@ public partial class Usuario
 
     public int? CiudadId { get; set; }
 
-    public string? Perfil { get; set; }
-
-    public string? Email { get; set; }
-
-    public string? Contraseña { get; set; }
+    public string? LicenciaConducir { get; set; }
 
     public DateTime? FechaCrea { get; set; }
 

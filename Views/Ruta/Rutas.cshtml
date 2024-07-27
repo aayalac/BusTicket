@@ -1,0 +1,48 @@
+﻿@model List<BusTicket.Models.Ruta>
+
+@{
+    ViewBag.Title = "Listado Rutas";
+}
+
+<h1>Lista de Rutas</h1>
+
+<!-- Botón para crear una nueva Ruta -->
+<p>
+    <a asp-action="CrearRutas" class="btn btn-primary">Crear Nueva Ruta</a>
+</p>
+
+<hr />
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Origen</th>
+            <th scope="col">Destino</th>
+            <th scope="col">Fecha Viaje</th>
+            <th scope="col">Tipo Servicio</th>
+            <th scope="col">Fecha Creacion</th>
+            <th scope="col">Hora Creacion</th>
+            <th scope="col">Usuario Creacion</th>
+            <th scope="col">Fecha Modificacion</th>
+            <th scope="col">Hora Modificacion</th>
+            <th scope="col">Usuario Modificador</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ruta in Model)
+        {
+            <tr>
+                <td>@ruta.Origen</td>
+                <td>@ruta.Destino</td>
+                <td>@ruta.FechaViaje?.ToString("yyyy-MM-dd")</td>
+                <td>@ruta.TipoServicio</td>
+                <td>@ruta.FechaCrea?.ToString("yyyy-MM-dd")</td>
+                <td>@ruta.HoraCrea</td>
+                <td>@ruta.UsuCrea</td>
+                <td>@ruta.FechaMod?.ToString("yyyy-MM-dd")</td>
+                <td>@ruta.HoraMod</td>
+                <td>@ruta.UsuMod</td>
+            </tr>
+        }
+    </tbody>
+</table>

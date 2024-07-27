@@ -18,7 +18,8 @@ namespace BusTicket.Controllers
         }
 
         public IActionResult Index()
-        {
+        {            
+
             return View();
         }
 
@@ -36,15 +37,15 @@ namespace BusTicket.Controllers
         {
             try
             {
-                var lst = from d in _context.tbl_usuario
-                          where d.email == email && d.contraseña == contraseña
+                var lst = from d in _context.Usuario
+                          where d.Email == email && d.Contraseña == contraseña
                           select d;
 
                 if (lst.Any())
                 {
                     Usuario oUsuario = lst.First();                    
-                    HttpContext.Session.SetString("Usuario", oUsuario.email.ToString()); // Ajusta según sea necesario
-                    return Content("1");
+                    HttpContext.Session.SetString("Usuario", oUsuario.Email.ToString()); // Ajusta según sea necesario
+                    return Content("1");                    
                 }
                 else
                 { 
