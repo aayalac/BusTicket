@@ -2,11 +2,40 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Construction;
 using BusTicket.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusTicket.Controllers
 {
     public class RutaController : Controller
     {
+        [HttpGet]
+        public IActionResult CrearRutasParcial()
+        {
+            return PartialView("CrearRutas");
+        }
+
+        [HttpGet]
+        public IActionResult EditarRutasParcial(int id)
+        {
+            var ruta = _context.Ruta.Find(id);
+            if (ruta == null)
+            {
+                return NotFound();
+            }
+            return PartialView("EditarRuta", ruta);
+        }
+
+        [HttpGet]
+        public IActionResult BorrarRutasParcial(int id)
+        {
+            var ruta = _context.Ruta.Find(id);
+            if (ruta == null)
+            {
+                return NotFound();
+            }
+            return PartialView("BorrarRuta", ruta);
+        }
+
         private readonly ApplicationDbContext _context;
 
         public RutaController(ApplicationDbContext context)
@@ -20,6 +49,7 @@ namespace BusTicket.Controllers
                               orderby d.FechaCrea
                               select new Ruta
                               {
+                                  IdRuta = d.IdRuta,
                                   Origen = d.Origen,
                                   Destino = d.Destino,
                                   FechaViaje = d.FechaViaje,
@@ -35,31 +65,19 @@ namespace BusTicket.Controllers
             return View(lst);
         }
 
-
-        // GET: RutaController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Ruta/Create
-        public IActionResult CrearRutas()
-        {
-            return View();
-        }
-
-        // POST: Ruta/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Origen,Destino,FechaViaje,TipoServicio,FechaCrea,HoraCrea,UsuCrea,FechaMod,HoraMod,UsuMod")] Ruta ruta)
+        public async Task<IActionResult> Create([Bind("Origen,Destino,FechaViaje,TipoServicio")] Ruta ruta)
         {
             if (ModelState.IsValid)
             {
                 ruta.FechaCrea = DateTime.Now;
                 ruta.HoraCrea = DateTime.Now.ToString("HH:mm:ss");
+                ruta.UsuCrea = "CurrentUser";
                 ruta.FechaMod = DateTime.Now;
                 ruta.HoraMod = DateTime.Now.ToString("HH:mm:ss");
-                
+                ruta.UsuMod = "CurrentUser";
+
                 _context.Add(ruta);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Rutas));
@@ -67,46 +85,70 @@ namespace BusTicket.Controllers
             return View(ruta);
         }
 
-        // GET: RutaController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: RutaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int IdRuta, [Bind("IdRuta,Origen,Destino,FechaViaje,TipoServicio,UsuMod")] Ruta ruta)
         {
-            try
+            if (IdRuta != ruta.IdRuta)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    // Obtén la ruta existente sin seguimiento
+                    var existingRuta = await _context.Ruta.AsNoTracking().FirstOrDefaultAsync(r => r.IdRuta == IdRuta);
+
+                    if (existingRuta == null)
+                    {
+                        return NotFound();
+                    }
+
+                    ruta.FechaMod = DateTime.Now;
+                    ruta.HoraMod = DateTime.Now.ToString("HH:mm:ss");
+                    ruta.FechaCrea = existingRuta.FechaCrea;
+                    ruta.HoraCrea = existingRuta.HoraCrea;
+                    ruta.UsuCrea = existingRuta.UsuCrea;
+                    ruta.UsuMod = existingRuta.UsuMod;
+
+                    // Marca la entidad como modificada
+                    _context.Entry(ruta).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!RutaExists(ruta.IdRuta))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "La ruta ha sido modificada por otro usuario. Por favor, recargue la página e intente nuevamente.");
+                        return View(ruta);
+                    }
+                }
+                return RedirectToAction(nameof(Rutas));
             }
+            return View(ruta);
         }
 
-        // GET: RutaController/Delete/5
-        public ActionResult Delete(int id)
+        private bool RutaExists(int id)
         {
-            return View();
-        }
+            return _context.Ruta.Any(e => e.IdRuta == id);
+        }             
 
-        // POST: RutaController/Delete/5
-        [HttpPost]
+        
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int IdRuta)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var ruta = await _context.Ruta.FindAsync(IdRuta);
+            _context.Ruta.Remove(ruta);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Rutas));
         }
+
     }
 }

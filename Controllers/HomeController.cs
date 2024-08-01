@@ -44,7 +44,7 @@ namespace BusTicket.Controllers
                 if (lst.Any())
                 {
                     Usuario oUsuario = lst.First();                    
-                    HttpContext.Session.SetString("Usuario", oUsuario.Email.ToString()); // Ajusta según sea necesario
+                    HttpContext.Session.SetString("Usuario", oUsuario.Email.ToString());
                     return Content("1");                    
                 }
                 else

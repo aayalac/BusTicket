@@ -1,0 +1,35 @@
+﻿@model BusTicket.Models.Ruta
+
+<div class="container">
+    <h3>¿Estás seguro que deseas eliminar esta ruta?</h3>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Origen</dt>
+                <dd class="col-sm-8">@Model.Origen</dd>
+
+                <dt class="col-sm-4">Destino</dt>
+                <dd class="col-sm-8">@Model.Destino</dd>
+
+                <dt class="col-sm-4">Fecha Viaje</dt>
+                <dd class="col-sm-8">@Model.FechaViaje?.ToString("yyyy-MM-dd")</dd>
+
+                <dt class="col-sm-4">Tipo Servicio</dt>
+                <dd class="col-sm-8">@Model.TipoServicio</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="IdRuta" />
+        <div class="form-group">
+            <input type="submit" value="Eliminar" class="btn btn-danger" />
+            <a asp-action="Rutas" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
