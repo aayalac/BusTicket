@@ -33,12 +33,12 @@ namespace BusTicket.Controllers
             return View("Login", "_LoginLayout");
         }
 
-        public ActionResult Ingresar(string email, string contraseña)
+        public ActionResult Ingresar(string email, string contraseÃ±a)
         {
             try
             {
                 var lst = from d in _context.Usuario
-                          where d.Email == email && d.Contraseña == contraseña
+                          where d.Email == email && d.ContraseÃ±a == contraseÃ±a
                           select d;
 
                 if (lst.Any())
