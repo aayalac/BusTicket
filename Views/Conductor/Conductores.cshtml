@@ -1,0 +1,487 @@
+﻿@{    
+    ViewBag.Title = "Administración Buses y Conductores";
+}
+
+<div class="container mt-3">
+    <h2>Administración - Buses y Conductores</h2>
+
+    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="conductores-tab" data-toggle="tab" href="#conductores" role="tab">Conductores</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="buses-tab" data-toggle="tab" href="#buses" role="tab">Buses</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="asignaciones-tab" data-toggle="tab" href="#asignaciones" role="tab">Asignaciones</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3">
+        <!-- Conductores -->
+        <div class="tab-pane fade show active" id="conductores" role="tabpanel">
+            <div class="box-header mb-2 d-flex justify-content-between">
+                <h5>Conductores</h5>
+                <button id="btnNewConductor" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#conductorModal">Crear Conductor</button>
+            </div>
+            <div class="table-responsive">
+                <table id="tblConductores" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Documento</th>
+                            <th>Teléfono</th>
+                            <th>Fecha Creación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Buses -->
+        <div class="tab-pane fade" id="buses" role="tabpanel">
+            <div class="box-header mb-2 d-flex justify-content-between">
+                <h5>Buses</h5>
+                <button id="btnNewBus" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#busModal">Crear Bus</button>
+            </div>
+            <div class="table-responsive">
+                <table id="tblBuses" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Placa</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Conductor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Asignaciones -->
+        <div class="tab-pane fade" id="asignaciones" role="tabpanel">
+            <h5>Asignar conductor a un bus</h5>
+            <div class="row">
+                <div class="col-md-5">
+                    <label>Bus</label>
+                    <select id="selectBusAsignar" class="form-control"></select>
+                </div>
+                <div class="col-md-5">
+                    <label>Conductor</label>
+                    <select id="selectConductorAsignar" class="form-control"></select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button id="btnAsignar" class="btn btn-success btn-block">Asignar</button>
+                </div>
+            </div>
+            <hr />
+            <div id="asignacionesTabla" class="table-responsive mt-2">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Bus</th>
+                            <th>Placa</th>
+                            <th>Conductor</th>
+                            <th>Documento</th>
+                            <th>Eliminar Asignación</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblAsignacionesBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Conductor (Crear / Editar) -->
+<div class="modal fade" id="conductorModal" tabindex="-1" role="dialog" aria-labelledby="conductorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="formConductor">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="conductorModalLabel">Crear Conductor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="conductorId" />
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input id="conductorNombre" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Documento</label>
+                        <input id="conductorDocumento" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input id="conductorTelefono" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Bus (Crear / Editar) -->
+<div class="modal fade" id="busModal" tabindex="-1" role="dialog" aria-labelledby="busModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="formBus">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="busModalLabel">Crear Bus</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="busId" />
+                    <div class="form-group">
+                        <label>Placa</label>
+                        <input id="busPlaca" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <input id="busMarca" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Modelo</label>
+                        <input id="busModelo" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Conductor (opcional)</label>
+                        <select id="busConductorSelect" class="form-control">
+                            <option value="">-- Ninguno --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmación Borrar -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p id="confirmDeleteText">¿Eliminar?</p>
+                <div class="text-right">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
+                    <button id="confirmDeleteBtn" type="button" class="btn btn-danger btn-sm">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Datos en memoria (se persisten en localStorage para la demo)
+        const storageKey = 'demo_bussticket_data_v1';
+
+        function defaultData() {
+            return {
+                conductores: [
+                    { id: 1, nombre: 'Juan Pérez', documento: '12345678', telefono: '600-111-222', fechaCrea: new Date().toISOString() },
+                    { id: 2, nombre: 'María López', documento: '87654321', telefono: '600-333-444', fechaCrea: new Date().toISOString() }
+                ],
+                buses: [
+                    { id: 1, placa: 'ABC-123', marca: 'Mercedes', modelo: '2019', conductorId: 1 },
+                    { id: 2, placa: 'XYZ-789', marca: 'Volvo', modelo: '2021', conductorId: null }
+                ]
+            };
+        }
+
+        function loadData() {
+            const raw = localStorage.getItem(storageKey);
+            if (!raw) {
+                const d = defaultData();
+                localStorage.setItem(storageKey, JSON.stringify(d));
+                return d;
+            }
+            return JSON.parse(raw);
+        }
+
+        function saveData(data) {
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+
+        let data = loadData();
+
+        // Render tablas
+        function renderConductores() {
+            const tbody = $('#tblConductores tbody').empty();
+            data.conductores.forEach(c => {
+                const tr = $('<tr>');
+                tr.append(`<td>${c.id}</td>`);
+                tr.append(`<td>${c.nombre}</td>`);
+                tr.append(`<td>${c.documento}</td>`);
+                tr.append(`<td>${c.telefono ?? ''}</td>`);
+                tr.append(`<td>${new Date(c.fechaCrea).toLocaleString()}</td>`);
+                tr.append(`<td>
+                    <button class="btn btn-sm btn-primary btn-edit-conductor" data-id="${c.id}">Editar</button>
+                    <button class="btn btn-sm btn-danger btn-delete-conductor" data-id="${c.id}">Eliminar</button>
+                </td>`);
+                tbody.append(tr);
+            });
+            populateConductorSelects();
+        }
+
+        function renderBuses() {
+            const tbody = $('#tblBuses tbody').empty();
+            data.buses.forEach(b => {
+                const conductor = data.conductores.find(x => x.id === b.conductorId);
+                const conductorTxt = conductor ? `${conductor.nombre}` : '<em>Sin asignar</em>';
+                const tr = $('<tr>');
+                tr.append(`<td>${b.id}</td>`);
+                tr.append(`<td>${b.placa}</td>`);
+                tr.append(`<td>${b.marca ?? ''}</td>`);
+                tr.append(`<td>${b.modelo ?? ''}</td>`);
+                tr.append(`<td>${conductorTxt}</td>`);
+                tr.append(`<td>
+                    <button class="btn btn-sm btn-primary btn-edit-bus" data-id="${b.id}">Editar</button>
+                    <button class="btn btn-sm btn-warning btn-assign-bus" data-id="${b.id}">Asignar</button>
+                    <button class="btn btn-sm btn-danger btn-delete-bus" data-id="${b.id}">Eliminar</button>
+                </td>`);
+                tbody.append(tr);
+            });
+            populateBusSelects();
+        }
+
+        function renderAsignaciones() {
+            const body = $('#tblAsignacionesBody').empty();
+            data.buses.forEach(b => {
+                if (!b.conductorId) return;
+                const c = data.conductores.find(x => x.id === b.conductorId);
+                if (!c) return;
+                const tr = $('<tr>');
+                tr.append(`<td>${b.marca ?? ''} ${b.modelo ?? ''}</td>`);
+                tr.append(`<td>${b.placa}</td>`);
+                tr.append(`<td>${c.nombre}</td>`);
+                tr.append(`<td>${c.documento}</td>`);
+                tr.append(`<td><button class="btn btn-sm btn-danger btn-remove-asign" data-busid="${b.id}">Eliminar</button></td>`);
+                body.append(tr);
+            });
+        }
+
+        function populateConductorSelects() {
+            const sel = $('#busConductorSelect').empty().append('<option value="">-- Ninguno --</option>');
+            const selAsign = $('#selectConductorAsignar').empty().append('<option value="">-- Seleccione --</option>');
+            data.conductores.forEach(c => {
+                sel.append(`<option value="${c.id}">${c.nombre} (${c.documento})</option>`);
+                selAsign.append(`<option value="${c.id}">${c.nombre} (${c.documento})</option>`);
+            });
+        }
+
+        function populateBusSelects() {
+            const selBus = $('#selectBusAsignar').empty().append('<option value="">-- Seleccione --</option>');
+            data.buses.forEach(b => {
+                selBus.append(`<option value="${b.id}">${b.placa} - ${b.marca ?? ''} ${b.modelo ?? ''}</option>`);
+            });
+            const selBusModal = $('#busConductorSelect'); // ya poblado por populateConductorSelects
+        }
+
+        // Inicializar UI
+        $(function () {
+            renderConductores();
+            renderBuses();
+            renderAsignaciones();
+
+            // Crear/Editar Conductor
+            $('#btnNewConductor').on('click', function () {
+                $('#conductorModalLabel').text('Crear Conductor');
+                $('#conductorId').val('');
+                $('#conductorNombre').val('');
+                $('#conductorDocumento').val('');
+                $('#conductorTelefono').val('');
+            });
+
+            $(document).on('click', '.btn-edit-conductor', function () {
+                const id = Number($(this).data('id'));
+                const c = data.conductores.find(x => x.id === id);
+                if (!c) return;
+                $('#conductorModalLabel').text('Editar Conductor');
+                $('#conductorId').val(c.id);
+                $('#conductorNombre').val(c.nombre);
+                $('#conductorDocumento').val(c.documento);
+                $('#conductorTelefono').val(c.telefono);
+                $('#conductorModal').modal('show');
+            });
+
+            $('#formConductor').on('submit', function (e) {
+                e.preventDefault();
+                const idVal = $('#conductorId').val();
+                if (idVal) {
+                    // editar
+                    const id = Number(idVal);
+                    const c = data.conductores.find(x => x.id === id);
+                    if (!c) return;
+                    c.nombre = $('#conductorNombre').val();
+                    c.documento = $('#conductorDocumento').val();
+                    c.telefono = $('#conductorTelefono').val();
+                } else {
+                    // crear
+                    const newId = data.conductores.length ? Math.max(...data.conductores.map(x => x.id)) + 1 : 1;
+                    data.conductores.push({
+                        id: newId,
+                        nombre: $('#conductorNombre').val(),
+                        documento: $('#conductorDocumento').val(),
+                        telefono: $('#conductorTelefono').val(),
+                        fechaCrea: new Date().toISOString()
+                    });
+                }
+                saveData(data);
+                $('#conductorModal').modal('hide');
+                renderConductores();
+                renderAsignaciones();
+            });
+
+            // Eliminar Conductor
+            let pendingDelete = null;
+            $(document).on('click', '.btn-delete-conductor', function () {
+                const id = Number($(this).data('id'));
+                pendingDelete = { type: 'conductor', id };
+                $('#confirmDeleteText').text('¿Eliminar conductor? Si tiene buses asignados, se quedarán sin conductor.');
+                $('#confirmDeleteModal').modal('show');
+            });
+
+            // Crear/Editar Bus
+            $('#btnNewBus').on('click', function () {
+                $('#busModalLabel').text('Crear Bus');
+                $('#busId').val('');
+                $('#busPlaca').val('');
+                $('#busMarca').val('');
+                $('#busModelo').val('');
+                $('#busConductorSelect').val('');
+            });
+
+            $(document).on('click', '.btn-edit-bus', function () {
+                const id = Number($(this).data('id'));
+                const b = data.buses.find(x => x.id === id);
+                if (!b) return;
+                $('#busModalLabel').text('Editar Bus');
+                $('#busId').val(b.id);
+                $('#busPlaca').val(b.placa);
+                $('#busMarca').val(b.marca);
+                $('#busModelo').val(b.modelo);
+                $('#busConductorSelect').val(b.conductorId ?? '');
+                $('#busModal').modal('show');
+            });
+
+            $('#formBus').on('submit', function (e) {
+                e.preventDefault();
+                const idVal = $('#busId').val();
+                if (idVal) {
+                    // editar
+                    const id = Number(idVal);
+                    const b = data.buses.find(x => x.id === id);
+                    if (!b) return;
+                    b.placa = $('#busPlaca').val();
+                    b.marca = $('#busMarca').val();
+                    b.modelo = $('#busModelo').val();
+                    b.conductorId = $('#busConductorSelect').val() ? Number($('#busConductorSelect').val()) : null;
+                } else {
+                    // crear
+                    const newId = data.buses.length ? Math.max(...data.buses.map(x => x.id)) + 1 : 1;
+                    data.buses.push({
+                        id: newId,
+                        placa: $('#busPlaca').val(),
+                        marca: $('#busMarca').val(),
+                        modelo: $('#busModelo').val(),
+                        conductorId: $('#busConductorSelect').val() ? Number($('#busConductorSelect').val()) : null
+                    });
+                }
+                saveData(data);
+                $('#busModal').modal('hide');
+                renderBuses();
+                renderAsignaciones();
+            });
+
+            // Eliminar Bus
+            $(document).on('click', '.btn-delete-bus', function () {
+                const id = Number($(this).data('id'));
+                pendingDelete = { type: 'bus', id };
+                $('#confirmDeleteText').text('¿Eliminar bus?');
+                $('#confirmDeleteModal').modal('show');
+            });
+
+            // Confirmar eliminar
+            $('#confirmDeleteBtn').on('click', function () {
+                if (!pendingDelete) return;
+                if (pendingDelete.type === 'conductor') {
+                    // quitar conductor de buses que tuvieran esa id
+                    data.buses.forEach(b => {
+                        if (b.conductorId === pendingDelete.id) b.conductorId = null;
+                    });
+                    data.conductores = data.conductores.filter(c => c.id !== pendingDelete.id);
+                } else if (pendingDelete.type === 'bus') {
+                    data.buses = data.buses.filter(b => b.id !== pendingDelete.id);
+                }
+                pendingDelete = null;
+                saveData(data);
+                $('#confirmDeleteModal').modal('hide');
+                renderConductores();
+                renderBuses();
+                renderAsignaciones();
+            });
+
+            // Asignaciones desde tabla bus
+            $(document).on('click', '.btn-assign-bus', function () {
+                const id = Number($(this).data('id'));
+                $('#selectBusAsignar').val(id);
+                $('#asignaciones-tab').tab('show');
+            });
+
+            // Asignar desde panel
+            $('#btnAsignar').on('click', function () {
+                const busId = Number($('#selectBusAsignar').val());
+                const conductorId = Number($('#selectConductorAsignar').val());
+                if (!busId || !conductorId) {
+                    alert('Seleccione bus y conductor.');
+                    return;
+                }
+                const bus = data.buses.find(b => b.id === busId);
+                if (!bus) return;
+                bus.conductorId = conductorId;
+                saveData(data);
+                renderBuses();
+                renderAsignaciones();
+                alert('Asignación realizada.');
+            });
+
+            // Eliminar asignación
+            $(document).on('click', '.btn-remove-asign', function () {
+                const busId = Number($(this).data('busid'));
+                const bus = data.buses.find(b => b.id === busId);
+                if (!bus) return;
+                if (!confirm('Eliminar asignación del bus?')) return;
+                bus.conductorId = null;
+                saveData(data);
+                renderBuses();
+                renderAsignaciones();
+            });
+
+            // Cuando cambian datos en localStorage (otra pestaña) recargar vista
+            window.addEventListener('storage', function (e) {
+                if (e.key === storageKey) {
+                    data = loadData();
+                    renderConductores();
+                    renderBuses();
+                    renderAsignaciones();
+                }
+            });
+        });
+    </script>
+}

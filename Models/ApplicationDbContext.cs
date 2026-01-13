@@ -21,7 +21,7 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Ciudad> Ciudad { get; set; }
 
-    public virtual DbSet<Conductor> Conductors { get; set; }
+    public virtual DbSet<Conductor> Conductores { get; set; }
 
     public virtual DbSet<HistorialViajes> HistorialViajes { get; set; }
 
